@@ -43,8 +43,46 @@ func TestReadFileToSlice(t *testing.T) {
 }
 
 func TestWriteSliceToFile(t *testing.T) {
-	RemoveFile(filePath)
 	if !WriteSliceToFile(filePath, []string{"123", ",./", "iop"}) {
+		t.Error()
+	}
+}
+
+func TestRemoveFile(t *testing.T) {
+	RemoveFile(filePath)
+	if IsPathExist(filePath) {
+		t.Error()
+	}
+}
+
+func TestCreateFile(t *testing.T) {
+	CreateFile(filePath)
+	if !IsPathExist(filePath) {
+		t.Error()
+	}
+}
+
+func TestRenameFile(t *testing.T) {
+	newPath := "./testNew.txt"
+	RenameFile(filePath, newPath)
+	if !IsPathExist(newPath) {
+		t.Error()
+	}
+}
+
+func TestGetFileNameWithoutSuffix(t *testing.T) {
+	CreateFile(filePath)
+	s := GetFileNameWithoutSuffix(filePath)
+	if s != "test" {
+		t.Error()
+	}
+}
+
+func TestGetFileStat(t *testing.T) {
+	stat := GetFileStat(filePath)
+	if stat != nil {
+		logLn(stat.Name(), stat.Size(), stat.IsDir(), stat.Mode(), stat.ModTime(), stat.Sys())
+	} else {
 		t.Error()
 	}
 }
