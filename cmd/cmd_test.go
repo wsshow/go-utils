@@ -9,6 +9,8 @@ func TestRun(t *testing.T) {
 }
 
 func TestFind(t *testing.T) {
-	s := Find("agent-collector*")
-	logLn(s)
+	ss := Find("agent-collector*")
+	for i, s := range ss {
+		logLn(i, s)
+	}
 }

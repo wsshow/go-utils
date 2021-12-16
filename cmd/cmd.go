@@ -22,7 +22,7 @@ func Run(cmd string) string {
 	if curOS == "linux" {
 		result, err = exec.Command("/bin/sh", "-c", cmd).Output()
 	} else if curOS == "windows" {
-		result, err = exec.Command("cmd", "/c", cmd).Output()
+		result, err = exec.Command("powershell", "/c", cmd).Output()
 	}
 	if err != nil {
 		logLn("cmd:", cmd, "error:", err)
@@ -30,12 +30,15 @@ func Run(cmd string) string {
 	return strings.TrimSpace(string(result))
 }
 
-func Find(s string) string {
+func Find(s string) []string {
+	var rts []string
 	var rt string
 	if curOS == "linux" {
 		rt = Run(fmt.Sprintf("find / -name \"%s\" 2>/dev/null", s))
+		rts = strings.Split(rt, "\n")
 	} else if curOS == "windows" {
-		rt = Run(fmt.Sprintf("powershell ls / -Recurse -Include \"%s\"", s))
+		rt = Run(fmt.Sprintf("foreach ($x in [Environment]::GetLogicalDrives()){ ls ($x) -R -I \"%s\" -ErrorAction \"Ignore\" | select FullName;}", s))
+		rts = strings.Split(rt, "\r\n")
 	}
-	return rt
+	return rts
 }
