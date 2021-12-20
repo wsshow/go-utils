@@ -19,6 +19,7 @@ func NewDownloader(concurrency int) *Downloader {
 	return &Downloader{concurrency: concurrency}
 }
 
+// Download 自动选择下载策略
 func (d *Downloader) Download(strURL, filename string) error {
 	if filename == "" {
 		filename = path.Base(strURL)
@@ -36,6 +37,7 @@ func (d *Downloader) Download(strURL, filename string) error {
 	return d.singleDownload(strURL, filename)
 }
 
+// multiDownload 多段下载
 func (d *Downloader) multiDownload(strURL, filename string, contentLen int) error {
 	log.Println("multiDownload")
 	partSize := contentLen / d.concurrency
