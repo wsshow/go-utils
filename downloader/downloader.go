@@ -100,6 +100,9 @@ func (d *Downloader) singleDownload(strURL, filename string) error {
 
 	buf := make([]byte, 32*1024)
 	_, err = io.CopyBuffer(f, resp.Body, buf)
+	if err != nil {
+		log.Fatal(err)
+	}
 	return nil
 }
 
