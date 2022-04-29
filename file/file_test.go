@@ -86,3 +86,9 @@ func TestGetFileStat(t *testing.T) {
 		t.Error()
 	}
 }
+
+func TestGetPrevDir(t *testing.T) {
+	ex := "/dev/sda/123/"
+	s := GetPrevDir(ex)
+	logLn(s)
+}

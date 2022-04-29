@@ -119,3 +119,20 @@ func GetFileStat(filePath string) os.FileInfo {
 	}
 	return fi
 }
+
+// GetPrevDir 获取上一级目录
+func GetPrevDir(dirPath string) string {
+	substr := func(s string, pos, length int) string {
+		runes := []rune(s)
+		l := pos + length
+		if l > len(runes) {
+			l = len(runes)
+		}
+		return string(runes[pos:l])
+	}
+	cnt := len(dirPath) - 1
+	if dirPath[cnt:] == "/" {
+		dirPath = dirPath[:cnt]
+	}
+	return substr(dirPath, 0, strings.LastIndex(dirPath, "/"))
+}
