@@ -1,6 +1,7 @@
 package downloader
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"log"
@@ -35,6 +36,29 @@ func (d *Downloader) Download(strURL, filename string) error {
 	}
 
 	return d.singleDownload(strURL, filename)
+}
+
+// SingleDownload 整体下载
+func (d *Downloader) SingleDownload(strURL, filename string) error {
+	return d.singleDownload(strURL, filename)
+}
+
+// MultiDownload 多段下载
+func (d *Downloader) MultiDownload(strURL, filename string) error {
+	if filename == "" {
+		filename = path.Base(strURL)
+	}
+
+	resp, err := http.Head(strURL)
+	if err != nil {
+		return err
+	}
+
+	if resp.StatusCode == http.StatusOK && resp.Header.Get("Accept-Ranges") == "bytes" {
+		return d.multiDownload(strURL, filename, int(resp.ContentLength))
+	}
+
+	return errors.New("multiple downloads are not supported")
 }
 
 // multiDownload 多段下载
@@ -86,6 +110,7 @@ func (d *Downloader) multiDownload(strURL, filename string, contentLen int) erro
 
 // singleDownload 整体下载
 func (d *Downloader) singleDownload(strURL, filename string) error {
+	log.Println("singleDownload")
 	resp, err := http.Get(strURL)
 	if err != nil {
 		return err
@@ -143,7 +168,7 @@ func (d *Downloader) downloadPartial(strURL, filename string, rangeStart, rangeE
 
 // getPartDir 部分文件存放的目录
 func (d *Downloader) getPartDir(filename string) string {
-	return strings.SplitN(filename, ".", 2)[0]
+	return strings.SplitN(filename, ".", 2)[0] + "_temp"
 }
 
 // getPartFilename 构造部分文件的名字
