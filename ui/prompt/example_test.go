@@ -3,6 +3,7 @@ package prompt
 import (
 	"fmt"
 	"github.com/c-bata/go-prompt"
+	"testing"
 )
 
 func ExampleCliPrompt() {
@@ -16,4 +17,8 @@ func ExampleCliPrompt() {
 
 	// Input: users
 	// Output: users
+}
+
+func TestExampleCliPrompt(t *testing.T) {
+	ExampleCliPrompt()
 }

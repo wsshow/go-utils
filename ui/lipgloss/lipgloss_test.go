@@ -60,3 +60,7 @@ func TestSetColorProfile(t *testing.T) {
 func formatEscapes(str string) string {
 	return strings.ReplaceAll(str, "\x1b", "\\x1b")
 }
+
+func TestDialog(t *testing.T) {
+	Dialog()
+}

@@ -3,6 +3,7 @@ package lipgloss
 import (
 	"fmt"
 	"github.com/charmbracelet/lipgloss"
+	"strings"
 )
 
 func WorkFlow() {
@@ -65,4 +66,59 @@ func WorkFlow() {
 	fmt.Println(style3.Render("style3"))
 	fmt.Println(anotherStyle.Render("anotherStyle"))
 	fmt.Println(lipgloss.NewStyle().Border(myCuteBorder).Render("myCuteBorder"))
+}
+
+const (
+	// In real life situations we'd adjust the document to fit the width we've
+	// detected. In the case of this example we're hardcoding the width, and
+	// later using the detected width only to truncate in order to avoid jaggy
+	// wrapping.
+	width = 96
+
+	columnWidth = 30
+)
+
+// Dialog.
+var (
+	subtle = lipgloss.AdaptiveColor{Light: "#D9DCCF", Dark: "#383838"}
+
+	dialogBoxStyle = lipgloss.NewStyle().
+			Border(lipgloss.RoundedBorder()).
+			BorderForeground(lipgloss.Color("#874BFD")).
+			Padding(1, 0).
+			BorderTop(true).
+			BorderLeft(true).
+			BorderRight(true).
+			BorderBottom(true)
+
+	buttonStyle = lipgloss.NewStyle().
+			Foreground(lipgloss.Color("#FFF7DB")).
+			Background(lipgloss.Color("#888B7E")).
+			Padding(0, 3).
+			MarginTop(1)
+
+	activeButtonStyle = buttonStyle.Copy().
+				Foreground(lipgloss.Color("#FFF7DB")).
+				Background(lipgloss.Color("#F25D94")).
+				MarginRight(2).
+				Underline(true)
+)
+
+func Dialog() {
+	doc := strings.Builder{}
+	okButton := activeButtonStyle.Render("Yes")
+	cancelButton := buttonStyle.Render("Maybe")
+
+	question := lipgloss.NewStyle().Width(50).Align(lipgloss.Center).Render("Are you sure you want to eat marmalade?")
+	buttons := lipgloss.JoinHorizontal(lipgloss.Top, okButton, cancelButton)
+	ui := lipgloss.JoinVertical(lipgloss.Center, question, buttons)
+
+	dialog := lipgloss.Place(width, 9,
+		lipgloss.Center, lipgloss.Center,
+		dialogBoxStyle.Render(ui),
+		lipgloss.WithWhitespaceChars("猫咪"),
+		lipgloss.WithWhitespaceForeground(subtle),
+	)
+
+	doc.WriteString(dialog + "\n\n")
 }
