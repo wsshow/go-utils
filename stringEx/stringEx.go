@@ -38,10 +38,17 @@ func (s *String) ReplaceAll(old, new string) *String {
 	return s
 }
 
-func (s *String) ToString() string {
+func (s *String) String() string {
 	return s.str
 }
 
 func (s *String) ToInt() (int, error) {
 	return strconv.Atoi(s.str)
+}
+
+func (s *String) Concat(ss ...string) *String {
+	for _, st := range ss {
+		s.str += st
+	}
+	return s
 }
